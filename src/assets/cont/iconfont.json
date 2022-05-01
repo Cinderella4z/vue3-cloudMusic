@@ -1,0 +1,37 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2019095",
+      "name": "我的好友",
+      "font_class": "wodehaoyou",
+      "unicode": "e7c1",
+      "unicode_decimal": 59329
+    },
+    {
+      "icon_id": "4251717",
+      "name": "发现",
+      "font_class": "faxian",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "11372674",
+      "name": "关注",
+      "font_class": "guanzhu",
+      "unicode": "e8b1",
+      "unicode_decimal": 59569
+    },
+    {
+      "icon_id": "29203197",
+      "name": "音乐",
+      "font_class": "yinle",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    }
+  ]
+}
