@@ -21,7 +21,7 @@ export default defineComponent({
 <style lang='less' scoped>
 .tabbar {
   background-color: @itemColor;
-  height: 84px;
+  height: 5rem;
   position: absolute;
   bottom: 0;
   left: 0;

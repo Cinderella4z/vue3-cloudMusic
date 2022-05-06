@@ -1,5 +1,5 @@
 import { usePinia } from "../../hooks/pinia";
-
+import { useRouters } from '../../hooks/router'
 
 
 export function startLoading () {
@@ -26,5 +26,13 @@ export function endLoading () {
   } else {
     return
   }
+
+}
+
+export function clearLoading () {
+  const { setPropoty, getPropoty } = usePinia()
+
+  setPropoty('loading', false)
+
 
 }

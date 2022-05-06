@@ -16,10 +16,25 @@ export function user () {
         cookie: cookie
       }
     })
-
+  }
+  function getSongDetail (ids) {
+    return request({
+      url: '/song/detail',
+      params: {
+        ids
+      }
+    })
+  }
+  function getSongUrl (id) {
+    return request({
+      url: '/song/url',
+      params: {
+        id
+      }
+    })
   }
 
   return {
-    getLikeList,
+    getLikeList, getSongDetail, getSongUrl
   }
 }

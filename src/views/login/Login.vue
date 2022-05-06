@@ -2,13 +2,13 @@
 
   <navbar>
     <template #left>
-      <van-icon name="cross" size="1.5rem" @click="close" />
+      <van-icon name="cross" @click="close" />
     </template>
     <template #center>
-      <span class="text" style="font-size: 1.2rem;">手机号登录</span>
+      <span class="text">手机号登录</span>
     </template>
     <template #right>
-      <van-icon name="exchange" size="1.5rem" @click="exchange" />
+      <van-icon name="exchange" @click="exchange" />
     </template>
   </navbar>
 
@@ -31,7 +31,7 @@
     </div>
 
     <div v-else class="input">
-      <input type="text" placeholder="输入密码" v-model="password" class="text">
+      <input type="password" placeholder="输入密码" v-model="password" class="text">
       <input type="submit" value="下一步" class="submit" @click="submit2">
       <div class="go" @click="close">立即体验</div>
     </div>
@@ -71,7 +71,7 @@ import navbar from 'comp/common/navbar/index.vue'
 import { Login } from 'network/login/index'
 import { usePinia, } from 'hooks/pinia';
 import { useRouters } from 'hooks/router';
-import { useKeepAlive } from 'hooks/useKeepAlive'
+import { useKeepAlive } from 'hooks/utils/useKeepAlive'
 
 
 //跳过登录功能
@@ -113,22 +113,27 @@ const { login } = Login()
 const value = ref('')//对应的code
 const showKeyboard = ref(true)
 const { addKeepAlive } = useKeepAlive(router)
-
 const onInput = (e) => {
   value.value += e
   if (value.value.length === 4) {
     // 验证码进行验证
     login(phone.value, value.value)
       .then(res => {
-        setPropoty('userInfo', res.data)
-        addKeepAlive();
-        push('/my')
+        if (res.data.code === 200) {
+          addKeepAlive();
+          setPropoty('userInfo', res.data)
+          push('/my')
+        }
+        else {
+          Toast(res.data.message)
+        }
       })
       .catch(rea => {
         Toast.fail('验证失败')
       })
   }
 }
+// 删除
 const onDelete = () => {
   value.value = value.value.substring(0, value.value.length - 1)
 }
@@ -137,7 +142,6 @@ const onDelete = () => {
 const password = ref('')
 const { login2 } = Login()
 const { setPropoty } = usePinia()
-
 const submit2 = () => {
 
   login2(phone.value, password.value).then(res => {
@@ -183,7 +187,7 @@ const submit2 = () => {
   p {
     margin-top: 5px;
     color: @baseColor;
-    font-size: 14px;
+    font-size: .8rem;
   }
 }
 

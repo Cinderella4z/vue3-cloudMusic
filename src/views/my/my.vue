@@ -3,19 +3,18 @@
   <!-- 上导航栏 -->
   <navbar>
     <template #left>
-      <van-icon name="bars" size="1.5rem" />
+      <van-icon name="bars" />
     </template>
     <template #center>
 
     </template>
     <template #right>
-      <van-icon name="search" size="1.5rem" />
+      <van-icon name="search" />
     </template>
   </navbar>
 
 
-
-  <user />
+  <mySelf />
 
   <myLike />
 
@@ -25,12 +24,14 @@
 
 // component
 import navbar from 'comp/common/navbar/index.vue'
-import user from './child/my-self.vue'
-import myLike from './child/my-like.vue';
+import myLike from './child/myLike/index.vue'
+import mySelf from './child/mySelf/index.vue'
+
+import { onActivated } from 'vue'
 // hooks
-import { useStorage } from '../../hooks/storage';
-import { usePinia } from '../../hooks/pinia';
-import { useRouters } from '../../hooks/router';
+import { useStorage } from 'hooks/storage';
+import { usePinia } from 'hooks/pinia';
+import { useRouters } from 'hooks/router';
 const { setStorage, } = useStorage()
 const { getPropoty } = usePinia()
 const { route } = useRouters()
@@ -38,13 +39,14 @@ const { route } = useRouters()
 // 登录成功后保存cookie
 const userInfo = getPropoty('userInfo')
 
-if (userInfo.value !== '') {
+if (userInfo.value.code === 200 && userInfo.value !== '') {
   const cookie = userInfo.value.cookie
   setStorage('cookie', cookie)
 }
 
 
-console.log('my');
+
+
 
 
 </script>

@@ -1,19 +1,15 @@
 <template>
-  <div></div>
+  <songList :songArr="[]" />
 </template>
 
-<script lang='ts'>
-import { defineComponent } from 'vue'
-export default defineComponent({
-  name: '',
-  setup() {
-    console.log(2);
+<script setup>
+import { ref } from 'vue'
+import songList from '../../components/content/songList/index.vue'
 
-    return {
-    }
-  },
-})
+
+
 
 </script>
+
 <style lang='less' scoped>
 </style>

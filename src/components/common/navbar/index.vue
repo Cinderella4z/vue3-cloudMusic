@@ -1,6 +1,7 @@
 <template>
 
-  <div class="navbar">
+  <div class="navbar"
+    :style="{ color: color, backgroundImage: 'url(' + backGroundImg + ')', backgroundColor: backGroundColor }">
 
     <div class="left">
       <slot name="left"></slot>
@@ -22,6 +23,7 @@
 import { defineComponent } from 'vue'
 export default defineComponent({
   name: '',
+  props: ['color', 'backGroundImg', 'backGroundColor'],
   setup() {
     return {
     }
@@ -32,13 +34,15 @@ export default defineComponent({
 <style lang='less' scoped>
 .navbar {
   display: flex;
-  height: 60px;
+  height: 3.8rem;
   text-align: center;
-  line-height: 60px;
-  // background-color: @;
+  line-height: 3.8rem;
+  font-size: 1.5rem;
+  font-weight: bolder;
 
   .center {
     flex: 1;
+    font-size: 1.2rem;
   }
 
   .right {
