@@ -26,7 +26,7 @@
   </div>
 
 
-  <scroll :height="tabImgHeight" @onHeight="onHeight">
+  <scroll :height="tabImgHeight" @onHeight="onHeight" @atBottom="atBottom">
 
     <div class="tabImg" :style="{ backgroundImage: 'url(' + backgroundImg + ')' }" ref="tabImg">
       <div class="box">
@@ -42,9 +42,9 @@
           </div>
 
           <div class="user" v-else>请先登录></div>
-
         </span>
       </div>
+
     </div>
     <!-- 播放全部 -->
     <div class="sticky1 " ref="sticky">
@@ -60,32 +60,47 @@
       <div v-for="(i, k) in songArr" class="songItem" @click="itemClick(i, k)"
         :style="{ color: k === currentIndex ? 'red' : '' }">
 
-        <div class="num" :style="{ color: k === currentIndex ? 'red' : '' }">{{ k + 1 }}</div>
+        <div class="num" :style="{ color: k === currentIndex ? 'red' : '' }">
+          <span v-if="k !== currentIndex">{{ k + 1 }}</span>
+          <van-icon name="bar-chart-o" v-else size="1.3rem" />
+        </div>
+
         <div class="right">
           <div class="songName">{{ i.name }}</div>
-          <span class="artist" v-for="(item, key) in i.ar" :style="{ color: k === currentIndex ? 'red' : '' }">
+          <span class="artist" v-for="(item, key) in i.ar">
             {{ item.name }}{{ key + 1 < i.ar.length ? ' / ' : ' ' }} </span>
         </div>
 
       </div>
     </div>
 
+
+    <div class="load" v-if="loadShow">上拉加载</div>
+    <div class="load" v-else>加载完毕</div>
+
   </scroll>
+
 
 
 </template>
 
 <script setup>
-import { ref, toRefs, reactive, computed, onMounted } from 'vue'
+import { ref, toRefs, watch, onMounted, } from 'vue'
 import navbar from 'comp/common/navbar/index.vue'
 import scroll from 'comp/common/betterscroll/index.vue'
 import { useRouters } from 'hooks/router';
 import { usePinia } from 'hooks/pinia';
 import { user } from 'network/user'
+import { useLoadSong } from 'hooks/utils/loadSong';
 
 const { back } = useRouters()
+
 const props = defineProps({
   songArr: {
+    type: Array,
+    defalut: () => []
+  },
+  idsArr: {
     type: Array,
     defalut: () => []
   },
@@ -96,10 +111,12 @@ const props = defineProps({
 })
 
 
+
 // 获取滚动完
 const ifShow = ref(false)
 const tabImg = ref(null)
 const tabImgHeight = ref(0)
+const loadShow = ref(false)
 onMounted(() => {
   tabImgHeight.value = tabImg.value.offsetHeight
 })
@@ -111,22 +128,37 @@ const onHeight = (bool) => {
 
 
 // 这是获取用户值的
-const { songArr } = toRefs(props)
+const { songArr, idsArr } = toRefs(props)
 const { getPropoty, setPropoty } = usePinia()
+
 const userInfo = getPropoty('userInfo')
 
-let profile;
-let userName;
-let touxiang;
-let backgroundImg = '';
+
+let profile, userName, touxiang;
+
+const backgroundImg = ref('');
+
 if (userInfo.value !== '') {
   profile = userInfo.value.profile
   userName = profile.nickname
   touxiang = profile.avatarUrl
 }
-if (songArr.value.length) {
-  backgroundImg = songArr.value[0].al.picUrl
-}
+
+watch(songArr, (n, o) => {
+  // 控制背景的
+  backgroundImg.value = n[0].al.picUrl
+  // 是否展示 加载文字
+  if (n.length < idsArr.value.length) {
+    loadShow.value = true
+  }
+  else {
+    loadShow.value = false
+  }
+
+})
+
+
+
 
 // 点击事件
 const currentIndex = ref('')
@@ -138,6 +170,12 @@ const itemClick = (i, k) => {
   getSongUrl(i.id).then(res => {
     setPropoty('currentSongUrl', res.data.data[0].url)
   })
+}
+
+// 监听滚动到底部事件
+const { loadSong } = useLoadSong()
+const atBottom = () => {
+  loadSong(idsArr, songArr, 50)
 }
 
 
@@ -152,8 +190,6 @@ const itemClick = (i, k) => {
 
 @itemHeight: 4rem;
 
-
-
 .tabImg {
   height: 10rem;
   overflow: hidden;
@@ -161,6 +197,8 @@ const itemClick = (i, k) => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  z-index: 10;
 
   .box {
     @marginX();
@@ -178,7 +216,10 @@ const itemClick = (i, k) => {
       font-size: 1.2rem;
       display: inline-block;
       height: 50%;
+      width: 50%;
+      overflow: hidden;
     }
+
 
     .user {
       font-size: .8rem;
@@ -274,5 +315,16 @@ const itemClick = (i, k) => {
 
 
 
+}
+
+.load {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: .8rem;
+  color: @baseColor;
+  // position: absolute;
+  bottom: 0;
 }
 </style>

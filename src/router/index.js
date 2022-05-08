@@ -1,5 +1,6 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
+import { usePinia } from 'hooks/pinia'
 // hooks
 import { useKeepAlive } from 'hooks/utils/useKeepAlive'
 
@@ -10,6 +11,7 @@ const my = () => import('views/my/my.vue')
 const guanzhu = () => import('views/guanzhu/guanzhu.vue')
 const login = () => import('views/login/Login.vue')
 const likeList = () => import('views/List/likeList.vue')
+const recommed = () => import('views/List/recommed.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,7 +21,8 @@ const router = createRouter({
       component: login,
       name: '/',
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        tabbarShow: true,
       }
     },
     {
@@ -27,7 +30,8 @@ const router = createRouter({
       name: 'find',
       component: find,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        tabbarShow: true,
       }
 
     },
@@ -36,7 +40,8 @@ const router = createRouter({
       name: 'my',
       component: my,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        tabbarShow: true,
       }
     },
     {
@@ -44,7 +49,8 @@ const router = createRouter({
       name: 'guanzhu',
       component: guanzhu,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        tabbarShow: true,
       }
     },
     {
@@ -52,7 +58,17 @@ const router = createRouter({
       name: 'likeList',
       component: likeList,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        tabbarShow: false,
+      }
+    },
+    {
+      path: '/recommed',
+      name: 'recommed',
+      component: recommed,
+      meta: {
+        keepAlive: false,
+        tabbarShow: false,
       }
     },
 
@@ -61,11 +77,10 @@ const router = createRouter({
 
 
 
-router.afterEach((to, from) => {
+router.beforeEach((to, from) => {
   const { setAllKeepAlive } = useKeepAlive(router)
-  // 使去过的组件加载一次就进行缓存
-  // to.meta.keepAlive = true
-  // route.value.meta.keepAlive = true
+  const { setPropoty } = usePinia()
+  setPropoty('tabbarShow', to.meta.tabbarShow)
   setAllKeepAlive(to)
 })
 

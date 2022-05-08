@@ -46,9 +46,9 @@ const { getPropoty } = usePinia()
 // 获取loading 来判断是否加载页面
 const loading = getPropoty('loading')
 
+const tabbarShow = getPropoty('tabbarShow')
+
 // 这是获取audio标签的
-
-
 const audio = ref(null)
 const currentSongUrl = getPropoty('currentSongUrl')
 
@@ -56,7 +56,6 @@ onMounted(() => {
 
   // 将大小自适应浏览器除去工作栏的高度
   document.querySelector('.app').style.height = (document.documentElement.clientHeight) + 'px'
-
   watch(currentSongUrl, (oldVal, newVal) => {
     audio.value.load()
     if (!oldVal) {
@@ -80,8 +79,8 @@ onMounted(() => {
   // 遮盖层
   --van-overlay-z-index: 99;
   width: 100vw;
-  height: 100vh;
   background-color: @backColor;
+  overflow: hidden;
 
   .loading {
     width: 100%;

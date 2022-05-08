@@ -7,6 +7,7 @@ export function useKeepAlive (router) {
   function setAllKeepAlive (to) {
 
     const needKeepAlive = getPropoty('needKeepAlive')
+
     for (let i = 0; i < needKeepAlive.value.length; i++) {
       if (needKeepAlive.value[i].name === to.name) {
         to.meta.keepAlive = false
@@ -15,8 +16,8 @@ export function useKeepAlive (router) {
       else {
         to.meta.keepAlive = true
       }
-
     }
+
 
   }
 

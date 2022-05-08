@@ -1,11 +1,8 @@
 import { request } from "../request";
-import { useStorage } from 'hooks/storage'
 
 
 
 export function user () {
-  const { getStorage } = useStorage()
-  const cookie = getStorage('cookie')
 
 
   function getLikeList (uid) {
@@ -13,7 +10,6 @@ export function user () {
       url: '/likelist',
       params: {
         uid,
-        cookie: cookie
       }
     })
   }

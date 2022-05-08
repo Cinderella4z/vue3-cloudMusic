@@ -3,13 +3,16 @@
     <div class="content" ref="content">
       <slot></slot>
     </div>
-    <div class="upLoad">上拉加载</div>
+
+
+
   </div>
+
 </template>
 
 <script setup>
 import { ref, } from 'vue'
-import { Toast } from 'vant';
+
 const $emit = defineEmits(['onHeight', 'atBottom'])
 
 const props = defineProps({
@@ -17,6 +20,10 @@ const props = defineProps({
     type: Number,
     defalut: 0
   },
+  // songArr: {
+  //   type: Array,
+  //   default: () => []
+  // }
 
 })
 
@@ -25,6 +32,10 @@ const props = defineProps({
 const wrapper = ref(null)
 const content = ref(null)
 
+
+
+
+let timer = null
 const onScroll = () => {
   // 控制 吸顶效果
   if (wrapper.value.scrollTop >= props.height) {
@@ -35,19 +46,22 @@ const onScroll = () => {
   }
 
   // 控制上拉加载
-  if (wrapper.value.scrollTop + wrapper.value.offsetHeight >= content.value.offsetHeight + 30) {
-    Toast('a')
-    $emit('atBottom')
+
+  if (wrapper.value.scrollTop + wrapper.value.offsetHeight >= content.value.offsetHeight + 40) {
+
+
+    if (timer) {
+      clearTimeout(timer)
+    }
+
+    timer = setTimeout(() => {
+      // console.log('加载');
+      $emit('atBottom')
+    }, 200);
+
+
   }
-
-
-
 }
-
-
-
-
-
 
 </script>
 
@@ -60,12 +74,5 @@ const onScroll = () => {
   left: 0;
   right: 0;
   overflow: scroll;
-}
-
-.upLoad {
-  width: 100%;
-  background-color: aqua;
-  text-align: center;
-  font-size: .8rem;
 }
 </style>

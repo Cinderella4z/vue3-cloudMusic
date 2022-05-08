@@ -5,7 +5,7 @@
     </div>
     <div class="text">
       <div>我喜欢的音乐</div>
-      <div class="number">{{ likeList.length }}首</div>
+      <div class="number">{{ likeListId.length }}首</div>
     </div>
   </div>
 </template>
@@ -18,10 +18,12 @@ import { user } from 'network/user'
 import { usePinia } from 'hooks/pinia/index.js'
 import { useRouters } from 'hooks/router';
 const { getPropoty, setPropoty } = usePinia()
-const { getLikeList, getSongDetail, getSongUrl } = user()
+const { getLikeList, } = user()
 // 用户信息
 const userInfo = getPropoty('userInfo')
-const likeList = getPropoty('likeList')
+const likeListId = getPropoty('likeListId')
+
+
 const uid = ref('')
 // 获取到喜欢音乐的id数组
 const res = ref('')
@@ -31,8 +33,7 @@ const ids = ref('')
 const getSongsInfo = async () => {
   res.value = await getLikeList(uid.value)
   ids.value = res.value.data.ids
-  const songsDetail = await getSongDetail(ids.value.toString())
-  setPropoty('likeList', songsDetail.data.songs)
+  setPropoty('likeListId', ids.value)
 }
 
 // 存在用户信息就执行

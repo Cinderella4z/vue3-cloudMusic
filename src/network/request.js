@@ -1,7 +1,10 @@
 import axios from 'axios'
 import { startLoading, endLoading, } from '../assets/utils/loading';
+import { useStorage } from 'hooks/storage'
 
 export function request (config) {
+  const { getStorage } = useStorage()
+  const cookie = getStorage('cookie')
 
   const instance = axios.create({
     baseURL: 'http://172.22.122.165:3000',
@@ -11,6 +14,8 @@ export function request (config) {
   instance.interceptors.request.use(config => {
     startLoading()
 
+    // 给每个请求加上cookie
+    config.params.cookie = cookie
     return config
   })
   instance.interceptors.response.use(config => {

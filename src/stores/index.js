@@ -7,8 +7,8 @@ export const useCounterStore = defineStore('counter', {
     return {
 
       userInfo: '',
-      // 我喜欢的音乐
-      likeList: [],
+      // 我喜欢的音乐ID
+      likeListId: [],
 
       currentSong: '',
       currentSongUrl: '',
@@ -20,6 +20,7 @@ export const useCounterStore = defineStore('counter', {
       loadingStack: 0,//请求栈
       /* 这是控制路由缓存的 */
       needKeepAlive: [],//需要缓存的路由
+      tabbarShow: true,
 
 
 

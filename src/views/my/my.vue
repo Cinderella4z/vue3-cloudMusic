@@ -32,7 +32,7 @@ import { onActivated } from 'vue'
 import { useStorage } from 'hooks/storage';
 import { usePinia } from 'hooks/pinia';
 import { useRouters } from 'hooks/router';
-const { setStorage, } = useStorage()
+const { setStorage } = useStorage()
 const { getPropoty } = usePinia()
 const { route } = useRouters()
 
