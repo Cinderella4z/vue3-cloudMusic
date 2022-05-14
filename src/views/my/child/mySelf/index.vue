@@ -37,6 +37,7 @@ const { push } = useRouters()
 
 const userInfo = getPropoty('userInfo')
 
+
 const profile = ref('')
 const touxiang = ref('')
 const username = ref('')
@@ -51,32 +52,9 @@ if (userInfo.value) {
   followeds.value = profile.value.followeds
 }
 
-onActivated(() => {
-
-  // console.log(profile.value);
-  // console.log(touxiang.value);
-  // if (userInfo.value) {
-  //   profile.value = userInfo.value.profile
-  //   touxiang.value = profile.value.avatarUrl
-  //   username.value = profile.value.nickname
-  //   follows.value = profile.value.follows
-  //   followeds.value = profile.value.followeds
-  // }
-
-})
 
 
 
-
-
-
-// if (userInfo.value !== '') {
-//   profile.value = userInfo.value.profile
-//   touxiang.value = profile.value.avatarUrl
-//   username.value = profile.value.nickname
-//   follows.value = profile.value.follows
-//   followeds.value = profile.value.followeds
-// }
 
 const toLogin = () => {
   push('/')

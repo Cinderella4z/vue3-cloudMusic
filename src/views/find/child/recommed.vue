@@ -22,29 +22,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { Find } from 'network/find/index'
 import { useRouters } from '../../../hooks/router';
+import { usePinia } from '../../../hooks/pinia';
 const { getRecommed, getRecommedSongs } = Find()
+
+const { setPropoty } = usePinia()
 const { push } = useRouters();
 
 const recommed = ref('')
-getRecommed(6).then(res => {
+getRecommed(12).then(res => {
   recommed.value = res.data.result
 })
 
 const goRecommed = (item) => {
-  getRecommedSongs(item.id, 100).then(res => {
-    push({
-      path: '/recommed',
-      query: {
-        songs: JSON.stringify(res.data.songs),
-        name: item.name
-      }
-    })
-  })
 
-
+  setPropoty('currentList', item)
+  push('/recommed')
 
 }
 
@@ -67,8 +62,8 @@ const goRecommed = (item) => {
   .tabName {
     margin-left: 5%;
     margin-right: 5%;
-    margin-top: 2%;
-    margin-bottom: 2%;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
 
     .s1 {
       font-size: 1.2rem;

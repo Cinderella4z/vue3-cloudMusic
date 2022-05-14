@@ -1,5 +1,5 @@
 <template>
-  <navbar :color="'white'" :backGroundImg="backgroundImg" :backGroundColor="'black'">
+  <navbar :color="'white'" :backGroundImg="backImg" :backGroundColor="'black'">
     <template #left>
       <span @click="back">
         <slot name="left"></slot>
@@ -17,51 +17,50 @@
     </template>
   </navbar>
 
+
+
   <div class="sticky2 " v-show="ifShow">
     <div>
       <van-icon name="play-circle" size="1.2rem" color="red" />
       <span class="playAll">播放全部</span>
-      <span class="songNum"> ({{ songArr.length }})</span>
+      <span class="songNum"> ({{ songs.length }})</span>
     </div>
   </div>
 
-
   <scroll :height="tabImgHeight" @onHeight="onHeight" @atBottom="atBottom">
-
-    <div class="tabImg" :style="{ backgroundImage: 'url(' + backgroundImg + ')' }" ref="tabImg">
+    <div class="tabImg" :style="{ backgroundImage: 'url(' + backImg + ')' }" ref="tabImg">
       <div class="box">
         <!-- 左边的图片 -->
-        <img :src="backgroundImg" alt="" v-if="backgroundImg !== ''">
+        <img :src="backImg" alt="" v-if="backImg !== ''">
         <img src="../../../assets/img/默认.png" v-else>
         <!-- 右边的用户相关 -->
-        <span>
-          {{ tabName }}
-          <div class="user" v-if="userInfo">
+
+        <div class="userInfo">
+          <div class="topName">{{ name }}</div>
+
+          <div class="creator" v-if="touxiang !== ''">
             <img :src="touxiang">
-            {{ userName }}
+            {{ ownerName }}
           </div>
-
-          <div class="user" v-else>请先登录></div>
-        </span>
+        </div>
       </div>
-
     </div>
     <!-- 播放全部 -->
     <div class="sticky1 " ref="sticky">
       <div>
         <van-icon name="play-circle" size="1.2rem" color="red" />
         <span class="playAll">播放全部</span>
-        <span class="songNum"> ({{ songArr.length }})</span>
+        <span class="songNum"> ({{ songs.length }})</span>
       </div>
     </div>
 
     <!-- 播放表 -->
     <div class="Items">
-      <div v-for="(i, k) in songArr" class="songItem" @click="itemClick(i, k)"
-        :style="{ color: k === currentIndex ? 'red' : '' }">
+      <div v-for="(i, k) in songs" class="songItem" @click="itemClick(i, k)"
+        :style="{ color: i.id === currentSong.id ? 'red' : '' }">
 
-        <div class="num" :style="{ color: k === currentIndex ? 'red' : '' }">
-          <span v-if="k !== currentIndex">{{ k + 1 }}</span>
+        <div class="num" :style="{ color: i.id === currentSong.id ? 'red' : '' }">
+          <span v-if="i.id !== currentSong.id">{{ k + 1 }}</span>
           <van-icon name="bar-chart-o" v-else size="1.3rem" />
         </div>
 
@@ -85,29 +84,22 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch, onMounted, } from 'vue'
+import { ref, toRefs, onMounted, computed, watch } from 'vue'
 import navbar from 'comp/common/navbar/index.vue'
 import scroll from 'comp/common/betterscroll/index.vue'
 import { useRouters } from 'hooks/router';
 import { usePinia } from 'hooks/pinia';
 import { user } from 'network/user'
 import { useLoadSong } from 'hooks/utils/loadSong';
+import { Find } from 'network/find';
 
 const { back } = useRouters()
 
 const props = defineProps({
   songArr: {
-    type: Array,
-    defalut: () => []
+    type: Object,
+    defalut: () => { }
   },
-  idsArr: {
-    type: Array,
-    defalut: () => []
-  },
-  tabName: {
-    type: String,
-    defalut: ''
-  }
 })
 
 
@@ -126,36 +118,35 @@ const onHeight = (bool) => {
   ifShow.value = bool
 }
 
+// 控制滚动后 白色背景高度
 
 // 这是获取用户值的
+const { getRecommedSongs } = Find()
 const { songArr, idsArr } = toRefs(props)
-const { getPropoty, setPropoty } = usePinia()
+const { setPropoty, getPropoty } = usePinia()
 
-const userInfo = getPropoty('userInfo')
+const currentSong = getPropoty('currentSong')
+
+const songs = ref('')
+const currentList = getPropoty('currentList')
+const name = computed(() => songArr.value ? songArr.value.name : '')
+const touxiang = computed(() => songArr.value && songArr.value.creator ? songArr.value.creator.avatarUrl : '')
+const backImg = computed(() => songs.value ? songs.value[0].al.picUrl : '')
+const ownerName = computed(() => songArr.value ? songArr.value.creator.nickname : '')
 
 
-let profile, userName, touxiang;
-
-const backgroundImg = ref('');
-
-if (userInfo.value !== '') {
-  profile = userInfo.value.profile
-  userName = profile.nickname
-  touxiang = profile.avatarUrl
+if (currentList.value) {
+  getRecommedSongs(currentList.value.id).then(res => {
+    songs.value = res.data.songs
+  })
 }
 
-watch(songArr, (n, o) => {
-  // 控制背景的
-  backgroundImg.value = n[0].al.picUrl
-  // 是否展示 加载文字
-  if (n.length < idsArr.value.length) {
-    loadShow.value = true
-  }
-  else {
-    loadShow.value = false
-  }
-
+watch(currentList, () => {
+  getRecommedSongs(currentList.value.id).then(res => {
+    songs.value = res.data.songs
+  })
 })
+
 
 
 
@@ -190,6 +181,8 @@ const atBottom = () => {
 
 @itemHeight: 4rem;
 
+
+
 .tabImg {
   height: 10rem;
   overflow: hidden;
@@ -210,31 +203,29 @@ const atBottom = () => {
       vertical-align: top;
     }
 
-    span {
-      @marginX();
-      color: @itemColor;
+    .userInfo {
+      margin-left: .5rem;
+      color: white;
       font-size: 1.2rem;
       display: inline-block;
-      height: 50%;
-      width: 50%;
+      width: 60%;
+      height: 100%;
       overflow: hidden;
-    }
 
+      .creator {
+        font-size: .8rem;
+        margin-top: .5rem;
+        color: @baseColor;
+        height: 50%;
 
-    .user {
-      font-size: .8rem;
-      margin-top: 5%;
-      font-weight: bolder;
-      color: @baseColor;
-
-      img {
-        vertical-align: middle;
-        width: 1.5rem;
+        img {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 30px;
+          vertical-align: middle;
+        }
       }
-
     }
-
-
   }
 }
 

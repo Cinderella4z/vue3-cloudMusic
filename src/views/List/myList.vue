@@ -1,6 +1,5 @@
 <template>
-  <songList :songArr="likeList">
-    <!-- 设置slot嵌套 navbar -->
+  <songList :songArr="list">
     <template #left>
       <van-icon name="arrow-left" />
     </template>
@@ -15,20 +14,12 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import songList from 'comp/content/songList/index.vue'
+import { ref, toRefs } from 'vue'
 import { usePinia } from 'hooks/pinia';
-import { useLoadSong } from 'hooks/utils/loadSong.js'
-// 获取
+import songList from 'comp/content/songList/index.vue'
+
 const { getPropoty } = usePinia()
-
-
-const likeList = getPropoty('currentList')
-
-
-
-
-
+const list = getPropoty('currentList')
 
 
 

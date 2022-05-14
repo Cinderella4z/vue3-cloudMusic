@@ -26,6 +26,14 @@ export function Find () {
       }
     })
   }
+  function getDaliySongs (limit) {
+    return request({
+      url: '/personalized/newsong',
+      params: {
+        limit
+      }
+    })
+  }
 
 
 
@@ -33,6 +41,6 @@ export function Find () {
 
 
   return {
-    getBanner, getRecommed, getRecommedSongs
+    getBanner, getRecommed, getRecommedSongs, getDaliySongs
   }
 }

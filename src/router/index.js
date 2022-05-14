@@ -12,6 +12,7 @@ const guanzhu = () => import('views/guanzhu/guanzhu.vue')
 const login = () => import('views/login/Login.vue')
 const likeList = () => import('views/List/likeList.vue')
 const recommed = () => import('views/List/recommed.vue')
+const myList = () => import('views/List/myList.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +67,15 @@ const router = createRouter({
       path: '/recommed',
       name: 'recommed',
       component: recommed,
+      meta: {
+        keepAlive: false,
+        tabbarShow: false,
+      }
+    },
+    {
+      path: '/myList',
+      name: 'myList',
+      component: myList,
       meta: {
         keepAlive: false,
         tabbarShow: false,

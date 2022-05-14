@@ -1,6 +1,5 @@
 <template>
-  <songList :songArr="songs" :tabName="name">
-    <!-- 设置slot嵌套 navbar -->
+  <songList :songArr="list">
     <template #left>
       <van-icon name="arrow-left" />
     </template>
@@ -15,14 +14,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouters } from '../../hooks/router';
+import { ref, toRefs } from 'vue'
+import { usePinia } from 'hooks/pinia';
 import songList from 'comp/content/songList/index.vue'
 
+const { getPropoty } = usePinia()
+const list = getPropoty('currentList')
 
-const { route } = useRouters()
-const songs = JSON.parse(route.value.query.songs)
-const name = route.value.query.name
 
 
 

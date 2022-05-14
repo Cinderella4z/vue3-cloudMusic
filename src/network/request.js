@@ -13,9 +13,10 @@ export function request (config) {
   // 拦截器 实现loading
   instance.interceptors.request.use(config => {
     startLoading()
-
     // 给每个请求加上cookie
-    config.params.cookie = cookie
+    if (cookie) {
+      config.params.cookie = cookie;
+    }
     return config
   })
   instance.interceptors.response.use(config => {

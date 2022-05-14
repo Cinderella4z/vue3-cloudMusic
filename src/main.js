@@ -5,7 +5,7 @@ import { PasswordInput, NumberKeyboard } from 'vant';
 import { Loading } from 'vant';
 import { Overlay } from 'vant';
 import { Swipe, SwipeItem } from 'vant';
-
+import 'default-passive-events';
 
 import App from './App.vue'
 import router from './router'

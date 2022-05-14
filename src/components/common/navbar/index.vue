@@ -40,6 +40,7 @@ export default defineComponent({
   font-size: 1.5rem;
   font-weight: bolder;
 
+
   .center {
     flex: 1;
     font-size: 1.2rem;

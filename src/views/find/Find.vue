@@ -12,14 +12,21 @@
     </template>
   </navbar>
 
-  <van-swipe :autoplay="3000" lazy-render class="my-swipe" indicator-color="white">
-    <van-swipe-item v-for="image in images" :key="image">
-      <img :src="image.pic" />
-    </van-swipe-item>
-  </van-swipe>
+  <scroll>
 
-  <recommed></recommed>
+    <div class="top">
+      <van-swipe :autoplay="3000" lazy-render class="my-swipe" indicator-color="white">
+        <van-swipe-item v-for="image in images" :key="image">
+          <img :src="image.pic" />
+        </van-swipe-item>
+      </van-swipe>
+    </div>
 
+    <recommed />
+
+    <daliy />
+
+  </scroll>
 
 
 
@@ -28,8 +35,12 @@
 <script lang='ts' setup>
 import { ref } from 'vue'
 import { Find } from '../../network/find/index'
+
 import navbar from 'comp/common/navbar/index.vue'
+import scroll from 'comp/common/betterScroll/index.vue'
 import recommed from './child/recommed.vue'
+import daliy from './child/daliy.vue'
+
 
 
 const { getBanner } = Find()
@@ -48,6 +59,11 @@ getBanner(2).then(res => {
 
 
 <style lang='less' scoped>
+::-webkit-scrollbar {
+  /*隐藏滚轮*/
+  display: none;
+}
+
 .input {
   background-color: aquamarineinput;
   height: 2.2rem;
@@ -59,6 +75,11 @@ getBanner(2).then(res => {
   font-weight: normal;
   color: @baseColor;
 }
+
+// .top {
+//   background-color: @itemColor;
+//   border-radius: 10px
+// }
 
 .my-swipe {
   @marginX();
